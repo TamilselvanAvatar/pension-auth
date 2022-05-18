@@ -1,0 +1,37 @@
+{"properties": [
+  {
+    "name": "service_charge_public",
+    "type": "java.lang.Double",
+    "description": "Service Charge for Public Bank which is represent using 'service_charge_public'"
+  },
+  {
+    "name": "service_charge_private",
+    "type": "java.lang.Double",
+    "description": "Service Charge for Private Bank which is represent using 'service_charge_private'"
+  },
+  {
+    "name": "percent_self_pension",
+    "type": "java.lang.Integer",
+    "description": "Percentage for self pension"
+  },
+  {
+    "name": "percent_family_pension",
+    "type": "java.lang.Integer",
+    "description": "Percentage for family pension"
+  },
+  {
+    "name": "jwt.secret",
+    "type": "java.lang.String",
+    "description": "Secret"
+  },
+  {
+    "name": "link",
+    "type": "java.lang.String",
+    "description": "A description for 'link'"
+  },
+  {
+    "name": "link",
+    "type": "java.lang.String",
+    "description": "Communication Link for Pension Detail Service"
+  }
+]}
