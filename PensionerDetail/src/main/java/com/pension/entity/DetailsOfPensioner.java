@@ -47,7 +47,7 @@ public class DetailsOfPensioner {
 	private long aadhaar; // <Pensioner date of birth>
 
 	@Column(name = "PAN")
-	private String PAN; // <Permanent account number>
+	private String pan; // <Permanent account number>
 
 	@Column(name = "SALARY")
 	private double salaryEarned; // <Last earned salary by the pensioner>

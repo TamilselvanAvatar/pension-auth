@@ -15,6 +15,7 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.result.MockMvcResultHandlers;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
+import org.springframework.web.client.HttpClientErrorException;
 
 import com.pension.model.BankDetail;
 import com.pension.model.DetailsOfPensioner;
@@ -36,7 +37,7 @@ class PensionDetailControllerTest {
 		BankDetail bankDetail = BankDetail.builder().accountNumber(89076543245l).bankType("PUBLIC").name("IOB").build();
 
 		pensioner = DetailsOfPensioner.builder().aadhaar(987654321098l).allowances(2000).dob(Date.valueOf("2022-12-12"))
-				.name("ABC").PAN("BAJPC4350N").salaryEarned(15000).bankDetail(bankDetail).build();
+				.name("ABC").pAN("BAJPC4350N").salaryEarned(15000).bankDetail(bankDetail).build();
 	}
 
 	@Test
@@ -54,5 +55,17 @@ class PensionDetailControllerTest {
 				.andExpect(MockMvcResultMatchers.jsonPath("$.PensionAmount").value(14000.0))
 				.andDo(MockMvcResultHandlers.print());
 	}
-	
+
+	@Test
+	void getPensionerByAadhaarTest2() throws Exception {
+		Mockito.when(service.validateAadhaar(Map.of("aadhaar", 987654321099l))).thenReturn(987654321099l);
+		Mockito.when(service.getPensionerFromServiceInstance("pensioner-detail", 987654321099l, ""))
+				.thenThrow(HttpClientErrorException.class);
+		Mockito.when(service.calculatedPensionDetails(null))
+				.thenReturn(null);
+		mockMvc.perform(MockMvcRequestBuilders.post("/ProcessPension").header("Authorization", "")
+				.contentType(MediaType.APPLICATION_JSON_VALUE).content("{ \"aadhaar\" : 987654321099 }"))
+				.andExpect(MockMvcResultMatchers.status().isBadRequest()).andDo(MockMvcResultHandlers.print());
+	}
+
 }

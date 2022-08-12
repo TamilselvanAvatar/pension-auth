@@ -35,14 +35,14 @@ class BankDetailRepositoryTest {
 	@DisplayName("Get data from BankDetail by using AccountNumber")
 	void findByAccountNumberTest() {
 		BankDetail bankDetail = bankDetailRepository.findByAccountNumber(89076543245l);
-		assertThat("IOB").isEqualTo(bankDetail.getName());
+		assertThat(bankDetail.getName()).isEqualTo("IOB");
 	}
 	
 	@Test
-	@DisplayName("Insert Bank Detail into Data Base Test")
+	@DisplayName("Insert Bank Detail into Data Base ")
 	void saveBankDetailTest() {	
 		BankDetail bankDetail = bankDetailRepository.findByAccountNumber(768906789012l);
-		assertThat("CUB").isEqualTo(bankDetail.getName());
+		assertThat(bankDetail.getName()).isEqualTo("CUB");
 	}
 
 }

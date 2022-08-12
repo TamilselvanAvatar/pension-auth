@@ -26,42 +26,42 @@ class UserDetailServiceTest {
 	void setup() {
 		LoginUserDetail user1 = LoginUserDetail.builder().userName("abcd").password("abcd").build();
 
-		LoginUserDetail user2 = LoginUserDetail.builder().userName("abc").password("abcd").build();
+		LoginUserDetail user2 = LoginUserDetail.builder().userName("abce").password("abcd").build();
 
 		Mockito.when(repository.findByUserName("abcd")).thenReturn(user1);
 		Mockito.when(repository.save(user2)).thenReturn(user2);
 	}
 
 	@Test
-	@DisplayName("Verify the User")
+	@DisplayName("CASE 1 : Verify the User Exist")
 	void verifyUserTest1() {
 		LoginUserDetail user = LoginUserDetail.builder().userName("abcd").password("abcd").build();
 		boolean result = service.verifyUser(user);
-		assertThat(true).isEqualTo(result);
+		assertThat(result).isTrue();
 	}
 
 	@Test
-	@DisplayName("Verify the User")
+	@DisplayName("CASE 2 : Verify the User Not Exist")
 	void verifyUserTest2() {
 		LoginUserDetail user = LoginUserDetail.builder().userName("abc").password("abcd").build();
 		boolean result = service.verifyUser(user);
-		assertThat(false).isEqualTo(result);
+		assertThat(result).isFalse();
 	}
 
 	@Test
-	@DisplayName("Save the User")
+	@DisplayName("CASE 1 : Save the User ")
 	void saveUserTest1() {
 		LoginUserDetail user = LoginUserDetail.builder().userName("abcd").password("abcd").build();
 		boolean result = service.saveUser(user);
-		assertThat(false).isEqualTo(result);
+		assertThat(result).isFalse();
 	}
 
 	@Test
-	@DisplayName("Save the User")
+	@DisplayName("CASE 2 : Save the User")
 	void saveUserTest2() {
-		LoginUserDetail user = LoginUserDetail.builder().userName("abc").password("abcd").build();
+		LoginUserDetail user = LoginUserDetail.builder().userName("abce").password("abcd").build();
 		boolean result = service.saveUser(user);
-		assertThat(true).isEqualTo(result);
+		assertThat(result).isTrue();
 	}
 
 }

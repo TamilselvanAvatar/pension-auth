@@ -30,18 +30,18 @@ public class UserDetailService {
 		String name = user.getUserName();
 		String password = user.getPassword();
 		LoginUserDetail dbUser = repository.findByUserName(name);
-		return dbUser != null && dbUser.getPassword().equals(password) ? true : false;
+		return dbUser != null && dbUser.getPassword().equals(password);
 	}
 
 	public boolean saveUser(LoginUserDetail user) {
 		String name = user.getUserName();
 		LoginUserDetail dbUser = repository.findByUserName(name);
 		LoginUserDetail saved = null;
-		if(dbUser == null) { 
+		if(dbUser == null && user.getPassword().length() > 3 &&  name.length() > 3) { 
 			saved = repository.save(user);
 			log.info("User is saved ...");
-		};
-		return saved != null ? true : false;
+		}
+		return saved != null;
 	}
 
 	public ResponseEntity<Map<String, String>> loginDetail(LoginUserDetail user) {
@@ -52,6 +52,7 @@ public class UserDetailService {
 		} else {
 			throw new NotValidUserException("In valid Credentials");
 		}
+		log.info("Token Generated ...");
 		return new ResponseEntity<>(new HashMap<>(Map.of("token", token)), HttpStatus.OK);
 	}
 

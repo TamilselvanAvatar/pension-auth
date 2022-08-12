@@ -1,12 +1,10 @@
 package com.pension.util;
 
+import javax.naming.AuthenticationException;
 import javax.xml.bind.DatatypeConverter;
 
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
-
-import com.pension.exception.JwtTokenEmptyException;
-import com.pension.exception.JwtTokenExpiredException;
 
 import io.jsonwebtoken.ExpiredJwtException;
 import io.jsonwebtoken.Jwts;
@@ -19,20 +17,20 @@ public class JwtToken {
 	@Value("${jwt.secret}")
 	private String jwtSecret;
 
-	public void validateToken(final String token) throws JwtTokenExpiredException, JwtTokenEmptyException {
+	public void validateToken(final String token) throws AuthenticationException {
 		try {
 			Jwts.parserBuilder().setSigningKey(DatatypeConverter.parseBase64Binary(jwtSecret)).build()
 					.parseClaimsJws(token);
 		} catch (SecurityException ex) {
-			throw new JwtTokenExpiredException("Invalid JWT signature");
+			throw new AuthenticationException("Invalid JWT signature");
 		} catch (MalformedJwtException ex) {
-			throw new JwtTokenExpiredException("Invalid JWT token");
+			throw new AuthenticationException("Invalid JWT token");
 		} catch (ExpiredJwtException ex) {
-			throw new JwtTokenExpiredException("Expired JWT token");
+			throw new AuthenticationException("Expired JWT token");
 		} catch (UnsupportedJwtException ex) {
-			throw new JwtTokenExpiredException("Unsupported JWT token");
+			throw new AuthenticationException("Unsupported JWT token");
 		} catch (IllegalArgumentException ex) {
-			throw new JwtTokenEmptyException("JWT string is empty.");
+			throw new AuthenticationException("JWT string is empty.");
 		}
 	}
 

@@ -11,7 +11,6 @@ import org.springframework.boot.test.autoconfigure.orm.jpa.TestEntityManager;
 
 import com.pension.entity.LoginUserDetail;
 
-
 @DataJpaTest
 class UserDetailRepositoryTest {
 
@@ -23,26 +22,22 @@ class UserDetailRepositoryTest {
 
 	@BeforeEach
 	void setUp() {
-		LoginUserDetail user = LoginUserDetail.builder()
-				.userName("abcd")
-				.password("abcd")
-				.build();
+		LoginUserDetail user = LoginUserDetail.builder().userName("abcd").password("abcd").build();
 		em.persist(user);
 	}
 
-	
 	@Test
-	@DisplayName("Find user in Database")
-	void findByUserNameTest1() {	
+	@DisplayName("CASE 1 :Find Exist user in Database")
+	void findByUserNameTest1() {
 		LoginUserDetail user = repository.findByUserName("abcd");
-		assertThat("abcd").isEqualTo(user.getUserName());
+		assertThat(user.getUserName()).isEqualTo("abcd");
 	}
-	
+
 	@Test
-	@DisplayName("Find user in Database")
-	void findByUserNameTest2() {	
+	@DisplayName("CASE 2 :Find Not Exist user in Database")
+	void findByUserNameTest2() {
 		LoginUserDetail user = repository.findByUserName("abc");
-		assertThat(user).isEqualTo(null);
+		assertThat(user).isNull();
 	}
 
 }

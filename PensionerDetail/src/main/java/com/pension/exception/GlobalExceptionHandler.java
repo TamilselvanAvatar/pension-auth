@@ -2,6 +2,8 @@ package com.pension.exception;
 
 import java.util.Date;
 
+import javax.naming.AuthenticationException;
+
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.MissingRequestHeaderException;
@@ -30,17 +32,10 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
 		return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(exp);
 	}
 
-	@ExceptionHandler(JwtTokenExpiredException.class)
-	protected ResponseEntity<ExceptionModel> handleJwtTokenExpiredException(JwtTokenExpiredException jtee) {
+	@ExceptionHandler(AuthenticationException.class)
+	protected ResponseEntity<ExceptionModel> handleJwtTokenExpiredException(AuthenticationException ae) {
 		String date = new Date().toString();
-		ExceptionModel exp = new ExceptionModel(jtee.getMessage(), "Provide new Token", date, true);
-		return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(exp);
-	}
-
-	@ExceptionHandler(JwtTokenEmptyException.class)
-	protected ResponseEntity<ExceptionModel> handleJwtTokenEmptyException(JwtTokenEmptyException jtmee) {
-		String date = new Date().toString();
-		ExceptionModel exp = new ExceptionModel(jtmee.getMessage(), "Authorization value should not empty", date, true);
+		ExceptionModel exp = new ExceptionModel(ae.getMessage(), "Provide Token", date, true);
 		return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(exp);
 	}
 

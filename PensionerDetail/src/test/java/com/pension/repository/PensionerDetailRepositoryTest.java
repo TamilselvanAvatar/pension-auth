@@ -33,7 +33,7 @@ class PensionerDetailRepositoryTest {
 		.allowances(2000)
 		.dob(new Date())
 		.name("ABC")
-		.PAN("BAJPC4350N")
+		.pan("BAJPC4350N")
 		.salaryEarned(15000)
 		.bankDetail(bankDetail)
 		.build();
@@ -45,14 +45,14 @@ class PensionerDetailRepositoryTest {
 	@DisplayName("Get Pensioner by using Aadhaar Number")
 	void findByAadhaarTest() {
 		DetailsOfPensioner pensioner = pensionerDetailRepository.findByAadhaar(987654321098l);
-		assertThat("BAJPC4350N").isEqualTo(pensioner.getPAN());
+		assertThat(pensioner.getPan()).isEqualTo("BAJPC4350N");
 	}
 	
 	@Test
 	@DisplayName("Get Pensioner by using PAN")
 	void findByPANTest() {
-		DetailsOfPensioner pensioner = pensionerDetailRepository.findByPAN("BAJPC4350N");
-		assertThat("ABC").isEqualTo(pensioner.getName());
+		DetailsOfPensioner pensioner = pensionerDetailRepository.findByPan("BAJPC4350N");
+		assertThat(pensioner.getName()).isEqualTo("ABC");
 	}
 	
 

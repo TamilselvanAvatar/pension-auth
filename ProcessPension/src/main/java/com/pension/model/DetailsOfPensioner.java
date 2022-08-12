@@ -16,7 +16,7 @@ public class DetailsOfPensioner {
 	private String name;
 	private Date dob;
 	private long aadhaar;
-	private String PAN;
+	private String pAN;
 	private double salaryEarned;
 	private int allowances;
 	private String typeofPension;

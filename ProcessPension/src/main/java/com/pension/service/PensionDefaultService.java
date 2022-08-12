@@ -3,6 +3,8 @@ package com.pension.service;
 import java.util.HashMap;
 import java.util.Map;
 
+import javax.naming.AuthenticationException;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,8 +17,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
-import com.pension.exception.JwtTokenEmptyException;
-import com.pension.exception.JwtTokenExpiredException;
 import com.pension.exception.NotInLengthException;
 import com.pension.model.DetailsOfPensioner;
 import com.pension.util.JwtToken;
@@ -26,7 +26,7 @@ public class PensionDefaultService {
 
 	private Logger log = LoggerFactory.getLogger(PensionDefaultService.class);
 
-	@Value("${link}")
+	@Value("${link:http://localhost:8000}")
 	private String link;
 
 	@Autowired
@@ -54,12 +54,14 @@ public class PensionDefaultService {
 
 		DetailsOfPensioner pensioner = (DetailsOfPensioner) obj;
 
-		double percent = pensioner.getTypeofPension() == "SELF" ? selfPensionPercent : familyPensionPercent;
+		double percent = pensioner.getTypeofPension().equals("SELF") ? selfPensionPercent : familyPensionPercent;
 
 		double pension = (percent * 0.01 * pensioner.getSalaryEarned()) + pensioner.getAllowances();
 
-		double charge = pensioner.getBankDetail().getBankType() == "PUBLIC" ? publicServiceCharge
+		double charge = pensioner.getBankDetail().getBankType().equalsIgnoreCase("PUBLIC") ? publicServiceCharge
 				: privateServiceCharge;
+		
+		log.debug("Charge = {} , Pensioner = {}" , charge , pensioner);
 
 		map.put("PensionAmount", pension);
 		map.put("BankServiceCharge", charge);
@@ -79,7 +81,7 @@ public class PensionDefaultService {
 
 	public DetailsOfPensioner getPensionerFromServiceInstance(String service, long aadhaar, String token) {
 
-		final Map<String, Object> params = new HashMap<String, Object>();
+		final Map<String, Object> params = new HashMap<>();
 		params.put("aadhaar", aadhaar);
 		params.put("serviceId", service);
 
@@ -89,13 +91,10 @@ public class PensionDefaultService {
 
 		HttpEntity<String> requestEntity = new HttpEntity<>(headers);
 
-		if (link.equals(null)) {
-			// link = "http://{serviceId}";
-			link = "http://localhost:8000";
-		}
-
 		String url = link + "/PensionerDetailByAadhaar/{aadhaar}";
 
+		log.info(url);
+		
 		ResponseEntity<DetailsOfPensioner> response = restTemplate.exchange(url, HttpMethod.GET, requestEntity,
 				DetailsOfPensioner.class, params);
 
@@ -104,7 +103,7 @@ public class PensionDefaultService {
 		return response.getBody();
 	}
 
-	public void validateAuthorization(String token) throws JwtTokenExpiredException, JwtTokenEmptyException {
+	public void validateAuthorization(String token) throws AuthenticationException {
 		jwt.validateToken(token);
 	}
 
